@@ -1,8 +1,9 @@
 ﻿@page "/"
-
+@inject TokenService tokenService
+@inject NavigationManager navigation
 <div class="page GooseGround">
     <div class="login-wrap" style="margin-top: 50px;">
-	<div class="login-html" >
+	<EditForm Model="user" OnValidSubmit="HandleValidSubmit" class="login-html" >
 		<input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Connexion</label>
 		<input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab" style="visibility:hidden">Sign Up</label>
 		<div class="login-form">
@@ -23,38 +24,46 @@
 					<input type="submit" class="button" value="Connexion">
 				</div>
 				<div class="hr"></div>
-				<div class="foot-lnk">
-					<a href="#forgot">Mot de passe oublié?</a>
-				</div>
+			<div class="alert alert-danger @alert">Infos de connexion incorrect</div>
 			</div>
-			@*<div class="sign-up-htm">
-				<div class="group">
-					<label for="user" class="label">Username</label>
-					<input id="user" type="text" class="input">
-				</div>
-				<div class="group">
-					<label for="pass" class="label">Password</label>
-					<input id="pass" type="password" class="input" data-type="password">
-				</div>
-				<div class="group">
-					<label for="pass" class="label">Repeat Password</label>
-					<input id="pass" type="password" class="input" data-type="password">
-				</div>
-				<div class="group">
-					<label for="pass" class="label">Email Address</label>
-					<input id="pass" type="text" class="input">
-				</div>
-				<div class="group">
-					<input type="submit" class="button" value="Sign Up">
-				</div>
-				<div class="hr"></div>
-				<div class="foot-lnk">
-					<label for="tab-1">Already Member?</label>
-				</div>
-			</div>*@
+		
 		</div>
-	</div>
+	</EditForm>
 </div>
 </div>
+@code {
+	User user = new User();
+	bool connect = false;
+	string alert = "d-none";
+
+	private async void HandleValidSubmit()
+	{
+		try
+		{
+			DirectoryEntry entry = new DirectoryEntry("LDAP://academy",
+				user.username, user.password);
+			var connection = entry.NativeObject ?? null;
+			alert = "d-none";
+			Random rnd = new Random();
+			await tokenService.InsertTokenAsync(new TokenModel
+				{
+					userId = user.username,
+					token = rnd.Next(100000, 999999),
+					created_on = DateTime.Now,
+					expire_on = DateTime.Now.AddMinutes(15)
+				});
+			navigation.NavigateTo("Confirmation");
+
+		}
+		catch (DirectoryServicesCOMException)
+		{
+			alert = "";
+
+		}
+		StateHasChanged();
+
+
+	}
+}
 
 
