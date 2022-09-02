@@ -1,5 +1,6 @@
 ﻿@page "/Confirmation"
 @inject TokenService tokenService
+@inject NavigationManager navigation
 <div class="page GooseGround">
     <div class="login-wrap" style="margin-top: 50px;">
 	<div class="login-html" >
@@ -15,18 +16,27 @@
 					<input type="submit" class="button" value="Valider">
 				</div>
 			</div>
-			<div class="alert alert-danger @alert">Infos de connexion incorrect</div>
+			<div class="alert alert-danger @alert">@message</div>
 		</div>
 	</EditForm>
 </div>
 </div>
 @code {
 	string alert = "d-none";
+	string message ;
 	TokenModel token = new TokenModel();
 	private async void ValidationToken(){
 		TokenModel confirmToken = await tokenService.GetTokenAsync(token);
 		if( confirmToken != null || confirmToken != new TokenModel()){
-
+			alert = "";
+			message = "Token incorrect"
+		}
+		else if (confirmToken.expire_on < DateTime.Now){
+			alert = "";
+			message = "Token expiré";
+		}
+		else {
+			navigation.navigateTo();
 		}
 	}
 }
