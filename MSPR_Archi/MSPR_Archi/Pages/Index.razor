@@ -35,49 +35,54 @@
 </div>
 </div>
 @code {
-	string alert = "d-none";
-
-	private async void HandleValidSubmit()
-	{
-		try
-		{
-			DirectoryEntry entry = new DirectoryEntry("LDAP://academy",
-				tokenService.user.username, tokenService.user.password);
-			var connection = entry.NativeObject ?? null;
-			alert = "d-none";
-			Random rnd = new Random();
-			await tokenService.InsertTokenAsync(new TokenModel
+    string alert = "d-none";
+	Random rnd = new Random();
+	
+    private async void HandleValidSubmit()
+    {
+	
+        try
+        {      
+			string initoken = rnd.Next(100000, 999999).ToString();      
+            DirectoryEntry entry = new DirectoryEntry("LDAP://academy",
+                tokenService.user.username, tokenService.user.password);
+           var connection = entry.NativeObject ?? null;
+            alert = "d-none";
+            await tokenService.InsertTokenAsync(new TokenModel
 				{
 					userId = tokenService.user.username,
-					token = rnd.Next(100000, 999999).ToString(),
+					token = initoken,
 					created_on = DateTime.Now,
 					expire_on = DateTime.Now.AddMinutes(15)
 				});
-			navigation.NavigateTo("Confirmation");
+            SendEmail("mailUtil1616@outlook.fr", initoken);
+            navigation.NavigateTo("Confirmation");
+           
+        }
+        catch (DirectoryServicesCOMException)
+        {
+            alert = "";
 
-		}
-		catch (DirectoryServicesCOMException)
-		{
-			alert = "";
-
-		}
-		StateHasChanged();
+        }
+        StateHasChanged();
 
 
-	}
+    }
 
-	public static void SendEmail()
-	{
-		Console.WriteLine("My debug output.");
-		try
+    public static void SendEmail(string userMail,string token)
+    {
+
+
+        Console.WriteLine("My debug output.");
+        try
 		{
 			MailMessage mailMessage = new MailMessage();
-			MailAddress fromAddress = new MailAddress("louistitan80@outlook.fr");
+			MailAddress fromAddress = new MailAddress("support@outlook.fr");
 			mailMessage.From = fromAddress;
-			mailMessage.To.Add("muguet.louis@outlook.fr");
-			mailMessage.Body = "tttttest";
+			mailMessage.To.Add(@userMail);
+			mailMessage.Body = "Bonjour, votre code est :" + @token;
 			mailMessage.IsBodyHtml = true;
-			mailMessage.Subject = "email de test";
+			mailMessage.Subject = "Code authentification";
 			SmtpClient smtpClient = new SmtpClient();
 			smtpClient.Host = "localhost";
 			smtpClient.DeliveryMethod = SmtpDeliveryMethod.SpecifiedPickupDirectory;
