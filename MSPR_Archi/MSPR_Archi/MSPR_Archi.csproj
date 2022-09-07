@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Pages\HomePage.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Negotiate" Version="6.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.8" />
@@ -30,10 +26,6 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Pages\HomePage.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Pages\HomePage.razor" />
   </ItemGroup>
 
 </Project>
