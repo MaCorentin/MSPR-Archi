@@ -8,7 +8,7 @@ namespace MSPR_Archi.Model
     {
         [Key]
         public string userId { get; set; }
-        public int token { get; set; }
+        public string token { get; set; }
         public DateTime created_on { get; set; }
         public DateTime expire_on { get; set; }
     }
