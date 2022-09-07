@@ -2,41 +2,46 @@
 @inject TokenService tokenService
 @inject NavigationManager navigation
 <div class="page GooseGround">
-    <div class="login-wrap" style="margin-top: 50px;">
-	<div class="login-html" >
-		<input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Confirmation</label>
-		<input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab" style="visibility:hidden">Sign Up</label>
-		<EditForm Model=token @OnValidSubmit="ValidationToken()" class="login-form">
-			<div class="sign-in-htm">
-				<div class="group">
-					<label for="user" class="label">Code de confirmation</label>
-					<InputText id="user" @bind-value=token.token type="text" class="input"/>
+	<div class="login-wrap" style="margin-top: 50px;">
+		<div class="login-html">
+			<input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Confirmation</label>
+			<input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab" style="visibility:hidden">Sign Up</label>
+			<EditForm Model=token @OnValidSubmit="ValidationToken()" class="login-form">
+				<div class="sign-in-htm">
+					<div class="group">
+						<label for="user" class="label">Code de confirmation</label>
+						<InputText id="user" @bind-value=token.token type="text" class="input" />
+					</div>
+					<div class="group">
+						<input type="submit" class="button" value="Valider">
+					</div>
 				</div>
-				<div class="group">
-					<input type="submit" class="button" value="Valider">
-				</div>
-			</div>
-			<div class="alert alert-danger @alert">@message</div>
+				<div class="alert alert-danger @alert">@message</div>
+
+			</EditForm>
 		</div>
-	</EditForm>
-</div>
+	</div>
 </div>
 @code {
 	string alert = "d-none";
-	string message ;
+	string message;
 	TokenModel token = new TokenModel();
-	private async void ValidationToken(){
+	private async void ValidationToken()
+	{
 		TokenModel confirmToken = await tokenService.GetTokenAsync(token);
-		if( confirmToken != null || confirmToken != new TokenModel()){
+		if (confirmToken != null || confirmToken != new TokenModel())
+		{
 			alert = "";
-			message = "Token incorrect"
+			message = "Token incorrect";
 		}
-		else if (confirmToken.expire_on < DateTime.Now){
+		else if (confirmToken.expire_on < DateTime.Now)
+		{
 			alert = "";
 			message = "Token expiré";
 		}
-		else {
-			navigation.navigateTo();
+		else
+		{
+			navigation.NavigateTo("quelquepart");
 		}
 	}
 }

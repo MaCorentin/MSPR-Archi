@@ -10,11 +10,11 @@
 			<div class="sign-in-htm">
 				<div class="group">
 					<label for="user" class="label">Identifiant</label>
-					<input id="user" type="text" class="input">
+					<InputText @bind-Value=user.username id="user" type="text" class="input"/>
 				</div>
 				<div class="group">
 					<label for="pass" class="label">Mot de passe</label>
-					<input id="pass" type="password" class="input" data-type="password">
+						<InputText id="pass" @bind-Value=user.password type="password" class="input" data-type="password" />
 				</div>
 				<div class="group">
 					<input id="check" type="checkbox" class="check" checked>
@@ -33,7 +33,6 @@
 </div>
 @code {
 	User user = new User();
-	bool connect = false;
 	string alert = "d-none";
 
 	private async void HandleValidSubmit()
