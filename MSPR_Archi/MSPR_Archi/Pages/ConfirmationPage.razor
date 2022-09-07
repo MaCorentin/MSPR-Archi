@@ -35,6 +35,7 @@
 		{
 			alert = "";
 			message = "Token incorrect";
+			navigation.NavigateTo("Errorpage");
 		}
 		else if (confirmToken.expire_on < DateTime.Now)
 		{
@@ -43,7 +44,7 @@
 		}
 		else
 		{
-			navigation.NavigateTo("quelquepart");
+			navigation.NavigateTo("HomePage");
 		}
 	}
 }
