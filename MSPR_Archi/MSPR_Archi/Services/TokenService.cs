@@ -10,6 +10,7 @@ namespace MSPR_Archi.Services
 {
     public class TokenService
     {
+        public User user = new User();
 
         private readonly AppDBContext _appDBContext;
     
@@ -20,6 +21,11 @@ namespace MSPR_Archi.Services
       
         public async Task<bool> InsertTokenAsync(TokenModel token)
         {
+            TokenModel find = _appDBContext.tokens.FirstOrDefault(t => t.userId == token.userId);
+            if ( find != null) {
+
+                _appDBContext.tokens.Remove(find);
+            }
             await _appDBContext.tokens.AddAsync(token);
             await _appDBContext.SaveChangesAsync();
             return true;
