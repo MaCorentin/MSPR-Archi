@@ -1,4 +1,6 @@
 ﻿@page "/"
+@using System.Net.Mail
+@using System.Net
 @inject TokenService tokenService
 @inject NavigationManager navigation
 <div class="page GooseGround">
@@ -61,6 +63,31 @@
 		}
 		StateHasChanged();
 
+
+	}
+
+	public static void SendEmail()
+	{
+		Console.WriteLine("My debug output.");
+		try
+		{
+			MailMessage mailMessage = new MailMessage();
+			MailAddress fromAddress = new MailAddress("louistitan80@outlook.fr");
+			mailMessage.From = fromAddress;
+			mailMessage.To.Add("muguet.louis@outlook.fr");
+			mailMessage.Body = "tttttest";
+			mailMessage.IsBodyHtml = true;
+			mailMessage.Subject = "email de test";
+			SmtpClient smtpClient = new SmtpClient();
+			smtpClient.Host = "localhost";
+			smtpClient.DeliveryMethod = SmtpDeliveryMethod.SpecifiedPickupDirectory;
+			smtpClient.PickupDirectoryLocation = "C:/testMail";
+			smtpClient.Send(mailMessage);
+
+		}
+		catch(Exception ex)
+		{
+		}
 
 	}
 }
