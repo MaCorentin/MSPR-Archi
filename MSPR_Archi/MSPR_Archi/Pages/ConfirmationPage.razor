@@ -30,7 +30,7 @@
 	private async void ValidationToken()
 	{
 		token.userId = tokenService.user.username;
-		TokenModel confirmToken = await tokenService.GetTokenAsync(token);
+		TokenModel confirmToken = await tokenService.VerifyTokenAsync(token);
 		if (confirmToken == null || confirmToken == new TokenModel())
 		{
 			alert = "";

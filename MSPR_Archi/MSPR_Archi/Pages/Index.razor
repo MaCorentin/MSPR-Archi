@@ -35,20 +35,30 @@
 </div>
 </div>
 @code {
-    string alert = "d-none";
+	string alert = "d-none";
 	Random rnd = new Random();
-	
-    private async void HandleValidSubmit()
-    {
-	
-        try
-        {      
-			string initoken = rnd.Next(100000, 999999).ToString();      
-            DirectoryEntry entry = new DirectoryEntry("LDAP://academy",
-                tokenService.user.username, tokenService.user.password);
-           var connection = entry.NativeObject ?? null;
-            alert = "d-none";
-            await tokenService.InsertTokenAsync(new TokenModel
+	private async void HandleValidSubmit()
+	{
+		try
+		{
+			DirectoryEntry entry = new DirectoryEntry("LDAP://academy",
+				tokenService.user.username, tokenService.user.password);
+				string initoken = rnd.Next(100000, 999999).ToString();  
+			var connection = entry.NativeObject ?? null;
+			alert = "d-none";
+			DirectorySearcher search = new DirectorySearcher(entry);
+			search.Filter = "(&(objectClass=user)(anr=" + tokenService.user.username + "))";
+			search.PropertiesToLoad.Add("mail");           
+			SearchResult result = search.FindOne();
+			List<string> test = new List<string>();
+			foreach (SearchResult sResultSet in search.FindAll())
+			{
+				if (sResultSet.Properties["mail"].Count > 0)
+					test.Add(sResultSet.Properties["mail"][0].ToString() + "<br/>");
+			}
+			
+			
+			await tokenService.InsertTokenAsync(new TokenModel
 				{
 					userId = tokenService.user.username,
 					token = initoken,

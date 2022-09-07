@@ -32,12 +32,16 @@ namespace MSPR_Archi.Services
         }
 
         
-        public async Task<TokenModel> GetTokenAsync(TokenModel retrieveToken)
+        public async Task<TokenModel> VerifyTokenAsync(TokenModel retrieveToken)
         {
             TokenModel token = await _appDBContext.tokens.FirstOrDefaultAsync(c => c.userId.Equals(retrieveToken.userId) && c.token == retrieveToken.token);
             return token;
         }
-      
+        public async Task<TokenModel> GetTokenAsync(string userId)
+        {
+            TokenModel token = await _appDBContext.tokens.FirstOrDefaultAsync(c => c.userId.Equals(userId));
+            return token;
+        }
 
         public async Task<bool> UpdateTokenAsync(TokenModel token)
         {
